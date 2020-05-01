@@ -1,0 +1,23 @@
+# Based on https://wiki.archlinux.org/index.php/Ppp
+
+plugin rp-pppoe.so
+# rp_pppoe_ac 'your ac name'
+# rp_pppoe_service 'your service name'
+
+# network interface
+onboard1
+# login name
+name "redacted"
+persist
+# Uncomment this if you want to enable dial on demand
+#demand
+#idle 180
+defaultroute
+hide-password
+noauth
+
+ifname "redacted"
++ipv6
+
+connect    "ip link set onboard1 up"
+disconnect "ip link set onboard1 down"

@@ -1,0 +1,35 @@
+# Based on https://github.com/systemd/systemd/issues/481#issuecomment-544337575,
+# but uses "pppd call" to get to the options, and "pppd linkname" + PIDFile=,
+# as well as different ordering.
+
+[Unit]
+Description=PPP connection for %I
+Documentation=man:pppd(8)
+Wants=network-pre.target
+Before=shutdown.target
+After=systemd-networkd.service
+Conflicts=shutdown.target
+DefaultDependencies=no
+
+[Service]
+Type=forking
+ExecStart=/sbin/pppd call %I linkname %I updetach
+ExecStop=/bin/kill $MAINPID
+ExecReload=/bin/kill -HUP $MAINPID
+PIDFile=/run/ppp-%I.pid
+StandardOutput=null
+Restart=on-failure
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict
+ReadWritePaths=/run/
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+SystemCallFilter=~@mount
+SystemCallArchitectures=native
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RestrictRealtime=yes
+
+[Install]
+WantedBy=network.service
