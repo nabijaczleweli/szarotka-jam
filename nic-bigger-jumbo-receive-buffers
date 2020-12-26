@@ -1,0 +1,32 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:		nic-bigger-jumbo-receive-buffers
+# Required-Start:	
+# Required-Stop:	
+# Default-Start:	2 3 4 5
+# Default-Stop:		
+# Short-Description:	Larger RX jumbo buffers, until sd-networkd starts supporting that
+### END INIT INFO
+
+
+case "$1" in
+	"start")
+		rx_jumbo_value=1023
+		;;
+	"stop")
+		rx_jumbo_value=100
+		;;
+	*)
+		echo "Usage: $0 {start|stop}"
+		exit 1
+		;;
+esac
+
+
+# Verify/check: sudo ethtool -g card1
+for iface_num in $(seq 1 2); do
+	iface="card$iface_num"
+
+	ethtool -G "$iface" rx-jumbo "$rx_jumbo_value"
+done

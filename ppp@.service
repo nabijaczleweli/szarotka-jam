@@ -5,10 +5,11 @@
 [Unit]
 Description=PPP connection for %I
 Documentation=man:pppd(8)
-Wants=network-pre.target
 Before=shutdown.target
-After=systemd-networkd.service
+After=systemd-networkd.service network-pre.target
+PartOf=systemd-networkd.service
 Conflicts=shutdown.target
+Wants=network.target
 DefaultDependencies=no
 
 [Service]
@@ -18,11 +19,11 @@ ExecStop=/bin/kill $MAINPID
 ExecReload=/bin/kill -HUP $MAINPID
 PIDFile=/run/ppp-%I.pid
 StandardOutput=null
-Restart=on-failure
 PrivateTmp=yes
 ProtectHome=yes
 ProtectSystem=strict
 ReadWritePaths=/run/
+ReadWritePaths=/var/log/ppp-ipupdown.log
 ProtectKernelTunables=yes
 ProtectControlGroups=yes
 SystemCallFilter=~@mount
@@ -32,4 +33,4 @@ MemoryDenyWriteExecute=yes
 RestrictRealtime=yes
 
 [Install]
-WantedBy=network.service
+WantedBy=multi-user.target

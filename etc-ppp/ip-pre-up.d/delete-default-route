@@ -1,0 +1,4 @@
+#!/bin/sh
+# Not actually required if no default route is ever present (i.e. systemd-networkd doesn't havea Gateway= anywhere)
+ip route del default 2>/dev/null  # Exits 2 if route didn't exist
+exit 0

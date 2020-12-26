@@ -36,9 +36,9 @@ export PPP_TTYNAME
 
 # If /var/log/ppp-ipupdown.log exists use it for logging.
 if [ -e /var/log/ppp-ipupdown.log ]; then
-  exec > /var/log/ppp-ipupdown.log 2>&1
-  echo $0 $@
+  exec >> /var/log/ppp-ipupdown.log 2>&1
   echo
+  echo "$(date -Ins):" $0 $@
 fi
 
 # This script can be used to override the .d files supplied by other packages.
@@ -46,5 +46,5 @@ if [ -x /etc/ppp/ip-pre-up.local ]; then
   exec /etc/ppp/ip-pre-up.local "$@"
 fi
 
-run-parts /etc/ppp/ip-pre-up.d \
+exec run-parts -v /etc/ppp/ip-pre-up.d \
   --arg="$1" --arg="$2" --arg="$3" --arg="$4" --arg="$5" --arg="$6"
