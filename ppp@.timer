@@ -1,0 +1,8 @@
+[Unit]
+Description=Restart PPP connection for %I
+
+[Timer]
+OnUnitInactiveSec=60
+
+[Install]
+WantedBy=timers.target
